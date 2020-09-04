@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+        <a class="navbar-item">
+          AgedditApp
         </a>
 
         <a role="button" class="navbar-burger burger" aria-expanded="false" data-target="#navdrop">
@@ -16,11 +16,11 @@
       <div id="navdrop" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item">
-            Home
+            Subposts
           </a>
 
           <a class="navbar-item">
-            Documentation
+            Profile
           </a>
         </div>
         <div class="navbar-end">
@@ -35,7 +35,7 @@
               <a class="button is-danger" @click="login()" v-if="!isLoggedIn">
                Sign-in with Google
               </a>
-              <a class="button is-light" @click="signout()" v-if="isLoggedIn">
+              <a class="button is-warning is-inverted" @click="signout()" v-if="isLoggedIn">
                 Log out
               </a>
             </div>

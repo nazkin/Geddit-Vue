@@ -1,12 +1,11 @@
 import firebase from './firebase';
 import store from './store';
 import db from './db';
+import router from './router';
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     // user signed in
-
-    console.log(user.uid);
     const newUser = {
       id: user.uid,
       name: user.displayName,
@@ -15,6 +14,7 @@ firebase.auth().onAuthStateChanged((user) => {
     };
     db.collection('users').doc(newUser.id).set(newUser);
     store.commit('auth/setUser', newUser);
+    router.push('/subpost');
   } else {
     // not signed in
     store.commit('auth/removeUser');
