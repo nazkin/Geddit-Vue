@@ -24,4 +24,10 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-## 1hour 51min
+## Todo 
+
+[] Hide the post form if the user is not logged in
+[] Show user information
+[] Format date presentation
+[] Upvoting and Downvoting posts
+

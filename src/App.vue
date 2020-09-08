@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item">
           AgedditApp
@@ -15,10 +15,9 @@
 
       <div id="navdrop" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">
-            Subposts
-          </a>
-
+          <router-link class="navbar-item" to="/subpost">
+            Subpost
+          </router-link>
           <a class="navbar-item">
             Profile
           </a>
@@ -73,5 +72,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
+}
+.navbar-item{
+  color: white;
 }
 </style>
