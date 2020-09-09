@@ -18,19 +18,30 @@
                     placeholder="Describe your subpost">
                 </b-input>
             </b-field>
-            <b-button native-type="submit" type="is-success">Create</b-button>
+            <b-button native-type="submit" type="is-primary is-light is-large">Submit</b-button>
             <div class="close-form">
               <button @click="displayFormHandler()" class="delete is-large"></button>
             </div>
         </form>
-        <button
-          @click="displayFormHandler()"
-          v-if="isLoggedIn && !displayForm"
-          class="button is-text"
-        >NEW POST</button>
+        <div v-if="isLoggedIn && !displayForm" class="view-form">
+          <form class="search-form">
+            <font-awesome-icon icon="search" size="lg"/>
+            <b-field>
+                <b-input v-model="searchValue" placeholder="Search" type="search"></b-input>
+            </b-field>
+          </form>
+          <span @click="displayFormHandler()">
+            <font-awesome-icon size="lg" icon="plus" />
+            <small> New</small>
+          </span>
+        </div>
         <div>
             <p class="post">{{this.subpost.name}}</p>
-            <article class="media" v-for="post in posts" :key="post.id">
+            <article class="media" v-for="post in filteredResults" :key="post.id">
+              <figure class="media-left">
+                <img class="post-avatar" :src="usersWithId[post.user_id].image" alt="">
+                <small>{{usersWithId[post.user_id].name}}</small>
+              </figure>
               <div class="media-content">
                 <div class="content">
                   <p>
@@ -42,16 +53,25 @@
                     <a v-if="post.url" :href="post.url" target="_blank">View Source</a>
                   </p>
                 </div>
+                <hr>
                 <nav class="level is-mobile">
                   <div class="level-left">
                     <a class="level-item">
-                      <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                      <div class="vote">
+                        <font-awesome-icon icon="thumbs-up"/>
+                        <small>0</small>
+                      </div>
                     </a>
                     <a class="level-item">
-                      <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-                    </a>
-                    <a class="level-item">
-                      <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                      <div class="vote">
+                        <router-link :to="{name: 'ViewPost', params: {
+                          post: $route.params.post,
+                          post_id: post.id,
+                        }}" >
+                          <font-awesome-icon icon="comments" />
+                        </router-link>
+                        <small>0</small>
+                      </div>
                     </a>
                   </div>
                 </nav>
@@ -75,9 +95,11 @@ export default {
       description: '',
     },
     displayForm: false,
+    searchValue: '',
   }),
   mounted() {
     this.initSubpost(this.$route.params.post);
+    this.initUsers();
   },
   watch: {
     subpost() {
@@ -85,7 +107,7 @@ export default {
         this.initPost(this.subpost.id);
       }
     },
-    '$route.params.post': function () {
+    $route() {
       this.initSubpost(this.$route.params.post);
     },
   },
@@ -93,9 +115,19 @@ export default {
     ...mapState('posts', ['posts']),
     ...mapState('auth', ['user', 'isLoggedIn']),
     ...mapGetters('posts', ['subpost']),
+    ...mapGetters('users', ['usersWithId']),
+    filteredResults() {
+      if (this.searchValue) {
+        const regexFilter = new RegExp(this.searchValue, 'gi');
+        return this.posts.filter((post) => post.title.match(regexFilter)
+         || post.description.match(regexFilter));
+      }
+      return this.posts;
+    },
   },
   methods: {
     ...mapActions('posts', ['createPost', 'initSubpost', 'initPost']),
+    ...mapActions('users', ['initUsers']),
     async createPostHandler() {
       if (this.post.title && (this.post.description || this.post.url)) {
         await this.createPost(this.post);
@@ -126,15 +158,15 @@ h1{
 
  }
 .post{
-    color: darkgreen;
+    color: darkslategray;
     font-size: 40px;
     padding: 0.5rem;
     width: 100%;
     font-weight: 300;
-    background: rgba(189, 189, 189, 0.1);
+    background: rgba(189, 189, 189, 0.2);
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border-left: 8px solid darkgreen;
+    border-left: 8px solid darkslategray;
 }
 .new-post{
     padding: 3rem;
@@ -145,9 +177,10 @@ h1{
 }
 .new-post h1{
   font-weight: 400;
-  color: lightseagreen;
+  color: darkslategray;
   letter-spacing: 2.0;
   font-size: 30px;
+  text-transform: uppercase;
 }
 .post-img{
   width: 10em;
@@ -169,5 +202,60 @@ h1{
 }
 .close-form{
   margin-top: 3rem;
+}
+.view-form{
+  width: 100%;
+  padding: 0.5rem;
+  background: rgb(190, 155, 190);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: linen;
+}
+.view-form span:hover {
+  cursor: pointer;
+  color: purple;
+}
+.post-avatar{
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+  border: 1px solid white;
+}
+.media-left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 6rem;
+}
+.media-left small {
+  font-size: 14px;
+  font-weight: 400;
+  color: lightslategray;
+  font-style: italic;
+}
+
+.vote{
+  min-height: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.vote small{
+  color: darkslategray;
+  opacity: 0.8;
+
+}
+.search-form{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  float: left;
+  width: 25%;
+
 }
 </style>

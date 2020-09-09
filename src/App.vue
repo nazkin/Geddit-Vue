@@ -2,9 +2,10 @@
   <div id="app">
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item">
-          AgedditApp
-        </a>
+
+        <h2 class="navbar-item">
+         GedIt__<font-awesome-icon icon="lightbulb" size="lg"/>
+        </h2>
 
         <a role="button" class="navbar-burger burger" aria-expanded="false" data-target="#navdrop">
           <span aria-hidden="true"></span>
@@ -34,7 +35,7 @@
               <a class="button is-danger" @click="login()" v-if="!isLoggedIn">
                Sign-in with Google
               </a>
-              <a class="button is-warning is-inverted" @click="signout()" v-if="isLoggedIn">
+              <a class="button is-primary is-small" @click="signout()" v-if="isLoggedIn">
                 Log out
               </a>
             </div>

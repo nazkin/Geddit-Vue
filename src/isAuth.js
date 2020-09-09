@@ -14,7 +14,9 @@ firebase.auth().onAuthStateChanged((user) => {
     };
     db.collection('users').doc(newUser.id).set(newUser);
     store.commit('auth/setUser', newUser);
-    router.push('/subpost');
+    router.push('/subpost').catch((err) => {
+      console.log(err);
+    });
   } else {
     // not signed in
     store.commit('auth/removeUser');
