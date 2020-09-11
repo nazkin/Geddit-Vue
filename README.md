@@ -23,7 +23,7 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-# 39.22 making sure to show placeholders while data is being loaded
+#1:26:00 making sure to show placeholders while data is being loaded
 
 ## Todo 
 [x] Google Authentication
@@ -37,5 +37,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 [] Format date presentation
 [] Upvoting and Downvoting posts
 [] Comments to posts
-[] Sort posts
 [x] Search posts based on key words in the title and description
