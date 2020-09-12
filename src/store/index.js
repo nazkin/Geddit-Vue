@@ -7,6 +7,7 @@ import auth from './auth';
 import subposts from './subposts';
 import posts from './posts';
 import users from './users';
+import comments from './comments';
 
 Vue.use(Vuex);
 
@@ -23,5 +24,6 @@ export default new Vuex.Store({
     subposts,
     posts,
     users,
+    comments,
   },
 });
