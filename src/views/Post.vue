@@ -55,22 +55,6 @@
                         }}" >...More</router-link>
                 </div>
                 <hr>
-                <nav class="level is-mobile">
-                  <div class="level-left">
-                    <a class="level-item">
-                      <div class="vote">
-                        <font-awesome-icon icon="thumbs-up"/>
-                        <small>0</small>
-                      </div>
-                    </a>
-                    <a class="level-item">
-                      <div class="vote">
-                          <font-awesome-icon icon="comments" />
-                        <small>0</small>
-                      </div>
-                    </a>
-                  </div>
-                </nav>
               </div>
               <figure class="media-right">
                   <img class="post-img" :src="post.url" @error="imageUrlAlt">
@@ -236,21 +220,6 @@ h1{
   font-style: italic;
 }
 
-.vote{
-  min-height: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  color: darkslategray;
-  padding: 1px 15px;
-  background: linen;
-}
-.vote small{
-  color: darkslategray;
-  opacity: 0.8;
-
-}
 .search-form{
   display: flex;
   flex-direction: row;

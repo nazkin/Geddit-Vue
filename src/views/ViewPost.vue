@@ -11,7 +11,7 @@
                 <p>{{this.postObj.description}}</p>
             </section>
         </header>
-        <h1 class="comment-title">Comments</h1>
+        <h1 class="comment-title"><span>{{this.comments.length}}</span> Comments</h1>
         <section v-if="this.isLoggedIn" class="comment-form">
             <div class="user-and-input">
                 <figure  class="comment-user">

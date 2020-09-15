@@ -36,5 +36,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 [x] Show user information
 [] Format date presentation
 [] Upvoting and Downvoting posts
-[] Comments to posts
+[x] Comments to posts
+[x] Change security to allow users upload comments
 [x] Search posts based on key words in the title and description
