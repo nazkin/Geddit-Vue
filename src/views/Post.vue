@@ -49,9 +49,10 @@
                     <br>
                     {{post.description}}
                   </p>
-                  <p>
-                    <a v-if="post.url" :href="post.url" target="_blank">View Source</a>
-                  </p>
+                  <router-link :to="{name: 'ViewPost', params: {
+                          post: $route.params.post,
+                          post_id: post.id,
+                        }}" >...More</router-link>
                 </div>
                 <hr>
                 <nav class="level is-mobile">
@@ -64,12 +65,7 @@
                     </a>
                     <a class="level-item">
                       <div class="vote">
-                        <router-link :to="{name: 'ViewPost', params: {
-                          post: $route.params.post,
-                          post_id: post.id,
-                        }}" >
                           <font-awesome-icon icon="comments" />
-                        </router-link>
                         <small>0</small>
                       </div>
                     </a>
@@ -78,6 +74,9 @@
               </div>
               <figure class="media-right">
                   <img class="post-img" :src="post.url" @error="imageUrlAlt">
+                  <p>
+                    <a v-if="post.url" :href="post.url" target="_blank">View Source</a>
+                  </p>
               </figure>
             </article>
         </div>
@@ -243,6 +242,9 @@ h1{
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  color: darkslategray;
+  padding: 1px 15px;
+  background: linen;
 }
 .vote small{
   color: darkslategray;

@@ -1,62 +1,45 @@
 <template>
     <div>
         <header class="post-header">
-            <h1 class="post-title">{{this.post[0].title}}</h1>
-            <img class="post-img" :src="this.post[0].url" alt="">
+            <h1 class="post-title">{{this.postObj.title}}</h1>
+            <p v-if="this.postObj.url">
+                <a :href="this.postObj.url">View Source</a>
+            </p>
+            <img class="post-img" :src="this.postObj.url" @error="imageUrlAlt"
+             alt="Image representing the geddit post topic">
             <section class="post-desc">
-                <p>{{this.post[0].description}}</p>
+                <p>{{this.postObj.description}}</p>
             </section>
         </header>
-        <p>{{$route.params.post_id}}</p>
         <h1 class="comment-title">Comments</h1>
-        <section class="comment-form">
-            <form>
-                <b-field class="comment-field">
-                    <b-input
-                        size="is-small"
-                        expanded=true
-                        minlength="1"
-                        maxlength="200"
-                        placeholder="Maxlength automatically counts characters"
-                        >
-                    </b-input>
-                </b-field>
-                <b-button type="is-dark is-small">Comment</b-button>
-            </form>
+        <section v-if="this.isLoggedIn" class="comment-form">
+            <div class="user-and-input">
+                <figure  class="comment-user">
+                    <img :src="this.user.image">
+                </figure>
+                <form @submit.prevent="createCommentHandler()">
+                    <b-field class="comment-field">
+                        <b-input
+                            v-model="comment.body"
+                            size="is-small"
+                            expanded
+                            minlength="1"
+                            maxlength="200"
+                            placeholder="Maxlength automatically counts characters"
+                            >
+                        </b-input>
+                    </b-field>
+                    <b-button native-type="submit" type="is-dark is-small">Comment</b-button>
+                </form>
+            </div>
         </section>
         <section class="comment-list">
-            <div class="comment-box">
+            <div  v-for="comment in this.comments" :key="comment.id"  class="comment-box">
                 <figure  class="comment-user">
-                    <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png">
+                    <img :src="usersWithId[comment.user_id].image" alt="avatar of comment author">
+                    <small>{{usersWithId[comment.user_id].name}}</small>
                 </figure>
-                <b-message>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Fusce id fermentum quam.
-                    Proin sagittis, nibh id hendrerit imperdiet, elit
-                    sapien laoreet elit
-                </b-message>
-            </div>
-            <div class="comment-box">
-                <figure  class="comment-user">
-                    <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png">
-                </figure>
-                <b-message>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Fusce id fermentum quam.
-                    Proin sagittis, nibh id hendrerit imperdiet, elit
-                    sapien laoreet elit
-                </b-message>
-            </div>
-            <div class="comment-box">
-                <figure  class="comment-user">
-                    <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png">
-                </figure>
-                <b-message>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Fusce id fermentum quam.
-                    Proin sagittis, nibh id hendrerit imperdiet, elit
-                    sapien laoreet elit
-                </b-message>
+                <b-message class="comment-body">{{comment.body}}</b-message>
             </div>
         </section>
     </div>
@@ -65,17 +48,36 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
+  data: () => ({
+    comment: {
+      body: '',
+    },
+  }),
   mounted() {
     this.initPostView(this.$route.params.post_id);
     this.initUsers();
+    this.initComments(this.$route.params.post_id);
   },
   computed: {
-    ...mapState('comments', ['post']),
+    ...mapState('comments', ['post', 'comments']),
+    ...mapState('auth', ['user', 'isLoggedIn']),
+    ...mapState('users', ['users']),
+    ...mapGetters('comments', ['postObj']),
+    ...mapGetters('users', ['usersWithId']),
   },
   methods: {
-    ...mapActions('comments', ['initPostView', 'initComments', 'createComments']),
+    ...mapActions('comments', ['initPostView', 'initComments', 'createComment']),
     ...mapActions('users', ['initUsers']),
-    ...mapGetters('users', ['usersWithId']),
+    async createCommentHandler() {
+      if (this.comment.body) {
+        await this.createComment(this.comment);
+        this.comment.body = '';
+      }
+    },
+    imageUrlAlt(event) {
+      const e = event;
+      e.target.src = 'https://images.unsplash.com/photo-1556401615-c909c3d67480?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80';
+    },
   },
 };
 
@@ -137,11 +139,25 @@ export default {
     align-items: center;
     margin-bottom: 1em;
 }
+.comment-body {
+    width: 90%;
+}
 .comment-user{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     width: 10%;
 }
 .comment-user img{
     width: 50%;
     height: auto;
+}
+.user-and-input{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 </style>

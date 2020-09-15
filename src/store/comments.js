@@ -6,22 +6,26 @@ import db from '../db';
 const dbComments = db.collection('comments');
 
 const state = {
-  post: [],
+  post: {},
   comments: [],
 };
 
+const getters = {
+  postObj: (state) => (state.post[0] ? state.post[0] : {})
+}
+
 const actions = {
-  async createComment({state}, comment) {
+  async createComment({getters}, comment) {
     const finalComment = {
       ...comment,
     };
     const res = await dbComments.doc();
     finalComment.id = res.id;
-    finalComment.post_id = state.post.id;
+    finalComment.post_id = getters.postObj.id;
     finalComment.created_at = firebase.firestore.FieldValue.serverTimestamp();
     finalComment.updated_at = firebase.firestore.FieldValue.serverTimestamp();
     finalComment.user_id = firebase.auth().currentUser.uid;
-    await dbComments.doc(finalPost.id).set(finalPost);
+    await dbComments.doc(finalComment.id).set(finalComment);
   },
   initPostView: firestoreAction(({ bindFirestoreRef }, postId) => {
     bindFirestoreRef('post', db.collection('posts').where('id', '==', postId));
@@ -35,4 +39,5 @@ export default {
   namespaced: true,
   state,
   actions,
+  getters,
 };
